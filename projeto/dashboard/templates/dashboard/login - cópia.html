@@ -1,0 +1,18 @@
+<!-- dashboard/templates/login.html -->
+
+
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %} <!-- Importe o filtro crispy_forms_tags aqui -->
+
+{% block page_content %}
+
+<div class="container mt-5">
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }} <!-- Utilize o filtro crispy_forms aqui -->
+        <button type="submit" class="btn btn-primary mt-3">Login</button>
+    </form>
+</div>
+{% endblock page_content %}
