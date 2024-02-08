@@ -1,0 +1,129 @@
+<!-- dashboard/templates/dashboard2.html -->
+
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %} <!-- Importe o filtro crispy_forms_tags aqui -->
+{% load static %}
+
+
+{% block page_content %}
+
+
+<hr>
+
+
+<div class="container mt-5">
+    <h1 class="mb-4">Dashboard</h1>
+
+    <!-- Filtros -->
+    <div class="mb-3">
+        <label for="filter">Filtrar por:</label>
+        <select id="filter" class="form-select">
+            <option value="day">Dia</option>
+            <option value="month">Mês</option>
+            <option value="year">Ano</option>
+        </select>
+    </div>
+
+    <!-- Gráfico de Barras -->
+    <div class="mb-5">
+        <canvas id="expenseChart" style="max-width: 600px;"></canvas>
+    </div>
+
+    <!-- Tabela de Despesas -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Categoria</th>
+                <th>Valor</th>
+                <th>Descrição</th>
+            </tr>
+        </thead>
+        <tbody id="expenseTableBody">
+            <!-- Aqui serão inseridas as entradas da tabela via JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+//////////////// >>>>>>>>>> Código JavaScript para interatividade e carregamento dinâmico dos dados
+
+document.addEventListener('DOMContentLoaded', function () {
+    const filterSelect = document.getElementById('filter');
+    const expenseTableBody = document.getElementById('expenseTableBody');
+
+    // Função para carregar dados da tabela com base no filtro selecionado
+    function loadExpenses(filter) {
+        // Realize uma solicitação AJAX ou busque dados do backend com base no filtro selecionado
+        // Atualize a tabela com os dados recebidos
+        // Por simplicidade, vou assumir que os dados já estão disponíveis no lado do cliente
+        const expenses = [
+            { date: '2024-01-31', category: 'Compras', amount: 150.00, description: 'Compras de supermercado' },
+            { date: '2024-01-31', category: 'Escola', amount: 303.00, description: 'Material escolar' },
+            { date: '2024-02-01', category: 'Compras', amount: 550.00, description: 'Compras de supermercado' },
+            { date: '2024-02-01', category: 'Escola', amount: 30.00, description: 'Material escolar' },
+    
+        ];
+
+        // Limpa a tabela antes de adicionar novas linhas
+        expenseTableBody.innerHTML = '';
+
+        // Adiciona linhas à tabela com base nos dados de despesas
+        expenses.forEach(expense => {
+            const row = `
+                <tr>
+                    <td>${expense.date}</td>
+                    <td>${expense.category}</td>
+                    <td>${expense.amount}</td>
+                    <td>${expense.description}</td>
+                </tr>
+            `;
+            expenseTableBody.insertAdjacentHTML('beforeend', row);
+        });
+    }
+
+    // Evento de mudança no filtro
+    filterSelect.addEventListener('change', function () {
+        const filterValue = filterSelect.value;
+        loadExpenses(filterValue);
+    });
+
+    // Carregar despesas inicialmente (por dia, por exemplo)
+    loadExpenses('day');
+});
+
+//////////////// Exemplo de código JavaScript para o gráfico usando Chart.js
+const ctx = document.getElementById('expenseChart').getContext('2d');
+
+const data = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    datasets: [{
+        label: 'Expenses',
+        data: [65, 59, 80, 81, 56, 55, 40],
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+    }]
+};
+
+const options = {
+    scales: {
+        y: {
+            beginAtZero: true
+        }
+    }
+};
+
+const expenseChart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: options
+});
+
+</script>
+
+
+
+{% endblock page_content %}

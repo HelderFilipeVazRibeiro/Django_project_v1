@@ -1,5 +1,4 @@
-<!-- dashboard/templates/login.html -->
-
+<!-- dashboard/templates/add_expense.html -->
 
 {% extends "base.html" %}
 
@@ -7,12 +6,17 @@
 
 {% block page_content %}
 
+<hr>
+
+
 <div class="container mt-5">
-    <h2>Login</h2>
+    <h2>Adicionar Despesa</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form|crispy }} <!-- Utilize o filtro crispy_forms aqui -->
-        <button type="submit" class="btn btn-primary mt-3">Login</button>
+    {{ form|crispy }} 
+        <button type="submit" class="btn btn-primary mt-3">Adicionar Despesa</button>
     </form>
 </div>
+<hr>
+
 {% endblock page_content %}

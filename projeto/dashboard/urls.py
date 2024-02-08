@@ -1,12 +1,10 @@
-# dashboard/urls.py
-
 from django.urls import path
-from django.views.generic import RedirectView
-from dashboard import views
+from dashboard.views import dashboard, add_expense, get_expense_data, dashboard2, dashboard3
 
 urlpatterns = [
- #   path('', RedirectView.as_view(pattern_name='login')),  # Redireciona a rota padrão para a página de login
-  #  path('login/', views.login_view, name='login'),
-    path('dashboard/', views.dashboard, name='dashboard'),
-    path('add_expense/', views.add_expense, name='add_expense'),
+    path('', dashboard, name='dashboard'),
+    path('add_expense/', add_expense, name='add_expense'),
+    path('dashboard2/', dashboard2, name='dashboard2'),
+    path('dashboard3/', dashboard3, name='dashboard3'),
+    path('api/expenses/', get_expense_data, name='get_expense_data'),
 ]
