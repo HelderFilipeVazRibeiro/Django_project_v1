@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Dashboard</h1>
+
+    <!-- Filtros -->
+    <div class="mb-3">
+        <label for="categoryFilter">Filtrar por Categoria:</label>
+        <select id="categoryFilter" class="form-select">
+            <option value="">Todas as Categorias</option>
+            <option value="compras">Compras</option>
+            <option value="escola">Escola</option>
+            <option value="lazer">Lazer</option>
+            <option value="restauracao">Restauração</option>
+            <option value="diversos">Diversos</option>
+        </select>
+    </div>
+
+    <!-- Gráfico de Gastos do Mês por Dia -->
+    <div class="mb-5">
+        <canvas id="dailyExpensesChart" style="max-width: 1200px;"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const categoryFilter = document.getElementById('categoryFilter');
+    const dailyExpensesChart = document.getElementById('dailyExpensesChart');
+
+    // Função para carregar dados do gráfico de gastos do mês por dia
+    function loadDailyExpenses() {
+        const selectedCategory = categoryFilter.value;
+
+        fetch('/daily_expenses/?category=' + selectedCategory)
+            .then(response => response.json())
+            .then(data => {
+                const dates = data.map(entry => entry.date);
+                const amounts = data.map(entry => entry.total_amount);
+
+                // Renderizar gráfico de gastos do mês por dia
+                new Chart(dailyExpensesChart, {
+                    type: 'bar',
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: 'Gastos do Mês por Dia',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            data: amounts
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Erro ao carregar gastos do mês por dia:', error));
+    }
+
+    // Evento de mudança no filtro de categoria
+    categoryFilter.addEventListener('change', loadDailyExpenses);
+
+    // Carregar gastos do mês por dia inicialmente
+    loadDailyExpenses();
+});
+</script>
+{% endblock %}

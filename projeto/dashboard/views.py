@@ -26,7 +26,9 @@ def dashboard2(request):
 
 def dashboard3(request):
     return render(request, "dashboard/dashboard3.html", {})
-    
+
+def graficos(request):
+    return render(request, "dashboard/graficos.html", {})
 
 def get_expense_data(request):
     filter_value = request.GET.get('filter')
@@ -57,3 +59,4 @@ def add_expense(request):
     Expense.objects.create(date=date, category=category, amount=amount, description=description)
     
     return redirect('dashboard')
+
