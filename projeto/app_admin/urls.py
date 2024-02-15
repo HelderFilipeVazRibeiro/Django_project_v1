@@ -15,3 +15,6 @@ urlpatterns = [
     path('', dashboard, name='dashboard'),
     path('add_expense/', add_expense, name='add_expense'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

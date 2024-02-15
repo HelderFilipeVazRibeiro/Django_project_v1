@@ -138,7 +138,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # To collect all the images in an uploads/ folder and serve them with a media/ URL
 MEDIA_ROOT = BASE_DIR / "uploads/"
-MEDIA_URL = "media/"
+MEDIA_URL = "uploads/"
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
