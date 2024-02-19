@@ -1,9 +1,8 @@
-<!-- dashboard/templates/add_expense.html -->
 {% extends "base.html" %}
 
 {% block page_content %}
 <div class="container mt-5">
-    <h1 class="mb-4">Dashboard</h1>
+    <h1 class="mb-4">add_expense</h1>
 
     <!-- Formulário para adicionar despesas -->
     <form method="post" action="{% url 'add_expense' %}">
@@ -15,7 +14,7 @@
         <div class="mb-3">
             <label for="category">Categoria:</label>
             <select id="category" name="category" class="form-select" required>
-                {% for choice in ALLOWED_CATEGORIES %}
+                {% for choice in allowed_categories %}
                 <option value="{{ choice.0 }}">{{ choice.1 }}</option>
                 {% endfor %}
             </select>

@@ -13,7 +13,6 @@ urlpatterns = [
     path("dashboard/", include("dashboard.urls")), #dashboard
     path("login/", include("login.urls")), #login
     path('', dashboard, name='dashboard'),
-    path('add_expense/', add_expense, name='add_expense'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

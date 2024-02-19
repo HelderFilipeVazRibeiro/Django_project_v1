@@ -54,17 +54,33 @@ document.addEventListener('DOMContentLoaded', function () {
         // Por simplicidade, vou assumir que os dados já estão disponíveis no lado do cliente
         const expenses = [
             { date: '2024-01-31', category: 'Compras', amount: 150.00, description: 'Compras de supermercado' },
-            { date: '2024-01-31', category: 'Escola', amount: 303.00, description: 'Material escolar' },
+            { date: '2024-10-31', category: 'Compras', amount: 150.00, description: 'Compras de supermercado' },
+            { date: '2024-04-31', category: 'Escola', amount: 303.00, description: 'Material escolar444444' },
+            { date: '2024-05-01', category: 'Compras', amount: 550.00, description: 'Compras de supermercado' },
+            { date: '2024-10-01', category: 'Escola', amount: 30.00, description: 'Material escolar4444' },
+            { date: '2024-11-31', category: 'Compras', amount: 150.00, description: 'Compras de supermercado' },
+            { date: '2024-11-31', category: 'Escola', amount: 303.00, description: 'Material escolar1111' },
+            { date: '2024-01-31', category: 'Escola', amount: 303.00, description: 'Material escolar444444' },
             { date: '2024-02-01', category: 'Compras', amount: 550.00, description: 'Compras de supermercado' },
-            { date: '2024-02-01', category: 'Escola', amount: 30.00, description: 'Material escolar' },
+            { date: '2024-02-01', category: 'Escola', amount: 30.00, description: 'Material escolar4444' },
             { date: '2024-01-31', category: 'Compras', amount: 150.00, description: 'Compras de supermercado' },
-            { date: '2024-01-31', category: 'Escola', amount: 303.00, description: 'Material escolar' },
+            { date: '2024-01-31', category: 'Escola', amount: 303.00, description: 'Material escolar1111' },
             { date: '2024-02-01', category: 'Compras', amount: 550.00, description: 'Compras de supermercado' },
-            { date: '2024-06-01', category: 'Escola', amount: 30.00, description: 'Material escolar' },
+            { date: '2024-06-01', category: 'Escola', amount: 30.00, description: 'Material escolar22222' },
             { date: '2024-07-31', category: 'Compras', amount: 150.00, description: 'Compras de supermercado' },
+            { date: '2024-08-31', category: 'Escola', amount: 303.00, description: 'Material escolar222' },
+            { date: '2024-09-01', category: 'Compras', amount: 550.00, description: 'Compras de supermercado' },
+            { date: '2024-12-01', category: 'Escola', amount: 30.00, description: 'Material escolar22' },
             { date: '2024-08-31', category: 'Escola', amount: 303.00, description: 'Material escolar' },
             { date: '2024-09-01', category: 'Compras', amount: 550.00, description: 'Compras de supermercado' },
-            { date: '2024-12-01', category: 'Escola', amount: 30.00, description: 'Material escolar' },
+            { date: '2024-12-01', category: 'Escola', amount: 30.00, description: 'Material escolar2' },
+            { date: '2023-07-31', category: 'Compras', amount: 150.00, description: 'Compras de supermercado' },
+            { date: '2023-08-31', category: 'Escola', amount: 303.00, description: 'Material escolar222' },
+            { date: '2023-09-01', category: 'Compras', amount: 550.00, description: 'Compras de supermercado' },
+            { date: '2023-12-01', category: 'Escola', amount: 30.00, description: 'Material escolar22' },
+            { date: '2023-08-31', category: 'Escola', amount: 303.00, description: 'Material escolar' },
+            { date: '2023-09-01', category: 'Compras', amount: 550.00, description: 'Compras de supermercado' },
+            { date: '2023-12-01', category: 'Escola', amount: 30.00, description: 'Material escolar2' },
     
         ];
 
@@ -83,6 +99,9 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             expenseTableBody.insertAdjacentHTML('beforeend', row);
         });
+
+        // Chama a função para carregar o gráfico com os dados atualizados da tabela
+        loadChartMonthlyExpenses(expenses);
     }
 
     // Evento de mudança no filtro
@@ -92,39 +111,76 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Carregar despesas inicialmente (por dia, por exemplo)
-    loadExpenses('day');
+    loadExpenses('month');
 });
 
 //////////////// Exemplo de código JavaScript para o gráfico usando Chart.js
-const ctx = document.getElementById('expenseChart').getContext('2d');
+function loadChartMonthlyExpenses(expenses) {
+    // Organize os dados da tabela de despesas por mês e calcule o total de despesas para cada mês
+    const monthlyExpenses = calculateMonthlyExpenses(expenses);
 
-const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-    datasets: [{
-        label: 'Expenses',
-        data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
-    }]
-};
+    // Crie um array de objetos contendo o mês e o total de despesas
+    const sortedMonthlyExpenses = Object.keys(monthlyExpenses).map(month => {
+        return { month: parseInt(month), total: monthlyExpenses[month] };
+    });
 
-const options = {
-    scales: {
-        y: {
-            beginAtZero: true
+    // Ordene o array de objetos por mês
+    sortedMonthlyExpenses.sort((a, b) => a.month - b.month);
+
+    // Extrai os nomes dos meses ordenados
+    const labels = sortedMonthlyExpenses.map(item => getMonthName(item.month - 1));
+    // Extrai os totais de despesas ordenados
+    const data = sortedMonthlyExpenses.map(item => item.total);
+
+    const ctx = document.getElementById('expenseChart').getContext('2d');
+
+    const chartData = {
+        labels: labels,
+        datasets: [{
+            label: 'Expenses',
+            data: data,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    const options = {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
         }
-    }
-};
+    };
 
-const expenseChart = new Chart(ctx, {
-    type: 'bar',
-    data: data,
-    options: options
-});
+    const expenseChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: options
+    });
+}
+
+// Função auxiliar para calcular os totais de despesas mensais
+function calculateMonthlyExpenses(expenses) {
+    const monthlyExpenses = {};
+
+    expenses.forEach(expense => {
+        const month = expense.date.split('-')[1]; // Extrai o mês da data
+        if (!monthlyExpenses[month]) {
+            monthlyExpenses[month] = 0;
+        }
+        monthlyExpenses[month] += expense.amount;
+    });
+
+    return monthlyExpenses;
+}
+
+// Função auxiliar para obter o nome do mês com base no número do mês (0-11)
+function getMonthName(monthIndex) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return months[monthIndex];
+}
 
 </script>
-
-
 
 {% endblock page_content %}
