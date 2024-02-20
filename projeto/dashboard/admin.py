@@ -1,12 +1,12 @@
 # dashboard/admin.py
 
 from django.contrib import admin
-from dashboard.models import Expense
+from .models import Expense
 
 class ExpenseAdmin(admin.ModelAdmin):
-    list_display = ('date', 'category', 'amount', 'description')  # Campos exibidos na lista de visualização
-    list_filter = ('category',)  # Filtros laterais com base na categoria
-    search_fields = ('description',)  # Campo de pesquisa para descrição
+    list_display = ('date', 'category', 'amount', 'description')  
+    list_filter = ('category',)  # <----- filtros laterais, das categorias que existem
+    search_fields = ('description',)  # campo de pesquisa para descricao
     #pass
     def get_expense_data(self):
         expenses = self.get_queryset().values('date', 'amount')
